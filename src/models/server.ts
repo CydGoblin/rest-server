@@ -20,9 +20,9 @@ export class Server {
   }
 
   middlewares() {
-    // Public directory
-    this.app.use(express.static("./src/public"));
     this.app.use(cors());
+    this.app.use(express.json());
+    this.app.use(express.static("./src/public"));
   }
 
   routes() {

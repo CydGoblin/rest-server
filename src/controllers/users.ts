@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { PostBody } from "@declarations/controllers/users";
 
 export const usersGet = (req: Request, res: Response) => {
   res.json({
@@ -6,9 +7,13 @@ export const usersGet = (req: Request, res: Response) => {
   });
 };
 
-export const usersPost = (req: Request, res: Response) => {
+export const usersPost = (req: Request<{}, {}, PostBody>, res: Response) => {
+  const body = req.body;
+  // TODO: Sanatize
+
   res.json({
     message: "post API",
+    body,
   });
 };
 
