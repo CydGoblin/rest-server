@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { GetQuery, PostBody, PutParams } from "@declarations/controllers/users";
+import { GetQuery, PostBody, PutParams } from "@typings/controllers/users";
 
 // Quety takes from ?query=1
 export const usersGet = (req: Request<{}, {}, {}, GetQuery>, res: Response) => {
