@@ -3,6 +3,8 @@ import express, { Express } from "express";
 import cors from "cors";
 dotenv.config();
 
+import { dbConnection } from "../database/config";
+
 // Routes
 import { default as userRouter } from "../routes/users";
 
@@ -11,12 +13,23 @@ export class Server {
   port: string;
 
   constructor() {
-    this.port = process.env.PORT!;
+    if (process.env.PORT) {
+      this.port = process.env.PORT;
+    } else {
+      console.log("You need to set a port");
+      throw new Error("No port set");
+    }
     this.app = express();
+
+    this.database();
 
     this.middlewares();
 
     this.routes();
+  }
+
+  async database() {
+    await dbConnection();
   }
 
   middlewares() {
