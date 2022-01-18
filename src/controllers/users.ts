@@ -1,6 +1,9 @@
+import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
-import { GetQuery, PostBody, PutParams } from "../typings/controllers/users";
+import { validationResult } from "express-validator";
 import { User } from "../models/user";
+import { GetQuery, PutParams } from "../typings/controllers/users";
+import { UserModel } from "../typings/models/user";
 
 // Quety takes from ?query=1
 export const usersGet = (req: Request<{}, {}, {}, GetQuery>, res: Response) => {
@@ -17,13 +20,32 @@ export const usersGet = (req: Request<{}, {}, {}, GetQuery>, res: Response) => {
 };
 
 export const usersPost = async (
-  req: Request<{}, {}, PostBody>,
+  req: Request<{}, {}, UserModel>,
   res: Response
 ) => {
-  const body = req.body;
-  // TODO: Sanatize
-  const user = new User(body);
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400).json({ error: true, errors });
+  }
 
+  const { name, email, password, role } = req.body;
+  // TODO: Sanatize
+  const user = new User({ name, email, password, role });
+
+  // Validate unique email
+  const alreadyExist = await User.findOne({ email }); // { email: email }
+  if (alreadyExist) {
+    return res.status(400).json({
+      error: true,
+      message: "An user with this email already exist.",
+    });
+  }
+
+  // encript password
+  const salt = bcrypt.genSaltSync();
+  user.password = bcrypt.hashSync(password, salt);
+
+  // save on DB
   await user.save();
 
   res.json({
