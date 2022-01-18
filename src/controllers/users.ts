@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
-import { validationResult } from "express-validator";
+import { ValidationError, validationResult } from "express-validator";
 import { User } from "../models/user";
 import { GetQuery, PutParams } from "../typings/controllers/users";
 import { UserModel } from "../typings/models/user";
@@ -25,7 +25,7 @@ export const usersPost = async (
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    res.status(400).json({ error: true, errors });
+    return res.status(400).json({ error: true, message: [...errors.array()] });
   }
 
   const { name, email, password, role } = req.body;
