@@ -23,11 +23,6 @@ export const usersPost = async (
   req: Request<{}, {}, UserModel>,
   res: Response
 ) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ error: true, message: [...errors.array()] });
-  }
-
   const { name, email, password, role } = req.body;
   // TODO: Sanatize
   const user = new User({ name, email, password, role });

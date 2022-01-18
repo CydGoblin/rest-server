@@ -7,6 +7,7 @@ import {
   usersPost,
   usersDelete,
 } from "../controllers/users";
+import { validateUser } from "../middlewares/validate-user";
 import { USER_ROLES } from "../typings/models/user";
 
 const router = Router();
@@ -22,6 +23,7 @@ router.post(
     }),
     check("email", "Invalid email").isEmail(),
     check("role").isIn([USER_ROLES.ADMIN, USER_ROLES.USER]),
+    validateUser,
   ],
   usersPost
 );
