@@ -5,10 +5,10 @@ export interface UserModel {
   img?: string;
   role: string;
   status: boolean;
-  google: boolean;
+  googleOrigin: boolean;
 }
 
 export enum USER_ROLES {
-  ADMIN,
-  USER,
+  ADMIN = "ADMIN",
+  USER = "USER",
 }

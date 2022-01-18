@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",
+  "types": "./typings",
   "scripts": {
     "start": "ts-node-dev --respawn ./src/app.ts",
     "build": "tsc"
@@ -14,7 +15,8 @@
     "cors": "^2.8.5",
     "dotenv": "^11.0.0",
     "express": "^4.17.2",
-    "mongoose": "^6.1.6"
+    "mongoose": "^6.1.6",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",

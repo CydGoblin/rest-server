@@ -1,7 +1,7 @@
-import { UserModel, USER_ROLES } from "@typings/models/user";
 import { model, Schema } from "mongoose";
+import { UserModel, USER_ROLES } from "../typings/models/user";
 
-export const UserSchema = new Schema<UserModel>({
+export const userSchema = new Schema<UserModel>({
   name: {
     type: String,
     require: [true, "Name is required"],
@@ -27,10 +27,10 @@ export const UserSchema = new Schema<UserModel>({
     type: Boolean,
     defualt: true,
   },
-  google: {
+  googleOrigin: {
     type: Boolean,
     defualt: false,
   },
 });
 
-export const User = model("User", UserSchema);
+export const User = model("User", userSchema);

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { GetQuery, PostBody, PutParams } from "@typings/controllers/users";
+import { GetQuery, PostBody, PutParams } from "../typings/controllers/users";
+import { User } from "../models/user";
 
 // Quety takes from ?query=1
 export const usersGet = (req: Request<{}, {}, {}, GetQuery>, res: Response) => {
@@ -15,13 +16,19 @@ export const usersGet = (req: Request<{}, {}, {}, GetQuery>, res: Response) => {
   });
 };
 
-export const usersPost = (req: Request<{}, {}, PostBody>, res: Response) => {
+export const usersPost = async (
+  req: Request<{}, {}, PostBody>,
+  res: Response
+) => {
   const body = req.body;
   // TODO: Sanatize
+  const user = new User(body);
+
+  await user.save();
 
   res.json({
     message: "post API",
-    body,
+    user,
   });
 };
 
