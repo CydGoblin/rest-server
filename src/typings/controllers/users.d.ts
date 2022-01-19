@@ -9,5 +9,5 @@ export interface GetQuery {
 }
 
 export interface PutParams {
-  id: number;
+  id: string;
 }

@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
-import { ValidationError, validationResult } from "express-validator";
 import { User } from "../models/user";
 import { GetQuery, PutParams } from "../typings/controllers/users";
 import { UserModel } from "../typings/models/user";
@@ -41,13 +40,45 @@ export const usersPost = async (
 };
 
 // Params takes from the url lie /:param1
-export const usersPut = (req: Request<PutParams>, res: Response) => {
+export const usersPut = async (
+  req: Request<PutParams, {}, UserModel>,
+  res: Response
+) => {
   const { id } = req.params;
+  const { password, email, ...data } = req.body;
 
-  res.json({
-    message: "put API",
-    id,
-  });
+  // To modify body
+  let encryptedPassword: string;
+  let updatedUser: UserModel;
+
+  // TODO: Validate with DB
+  if (password) {
+    // encript password
+    const salt = bcrypt.genSaltSync();
+    encryptedPassword = bcrypt.hashSync(password, salt);
+
+    updatedUser = {
+      password: encryptedPassword,
+      email,
+      ...data,
+    };
+  } else {
+    updatedUser = {
+      password,
+      email,
+      ...data,
+    };
+  }
+
+  try {
+    const user = await User.findByIdAndUpdate(id, updatedUser, { new: true });
+    res.json({
+      message: "put API",
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const usersPatch = (req: Request, res: Response) => {
