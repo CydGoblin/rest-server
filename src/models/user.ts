@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
-import { UserModel, USER_ROLES } from "../typings/models/user";
+import { USER_ROLES } from "../typings/constants/roles";
+import { UserModel } from "../typings/models/user";
 
 export const userSchema = new Schema<UserModel>({
   name: {

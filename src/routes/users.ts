@@ -8,7 +8,8 @@ import {
   usersDelete,
 } from "../controllers/users";
 import { validateUser } from "../middlewares/validate-user";
-import { USER_ROLES } from "../typings/models/user";
+import { Role } from "../models/role";
+// import { USER_ROLES } from "../typings/models/user";
 
 const router = Router();
 
@@ -22,7 +23,13 @@ router.post(
       min: 6,
     }),
     check("email", "Invalid email").isEmail(),
-    check("role").isIn([USER_ROLES.ADMIN, USER_ROLES.USER]),
+    // check("role").isIn([USER_ROLES.ADMIN, USER_ROLES.USER]),
+    check("role").custom(async (role = "") => {
+      const roleExist = await Role.findOne({ role });
+      if (!roleExist) {
+        throw new Error(`The user role "${role}" does not exist on DB`);
+      }
+    }),
     validateUser,
   ],
   usersPost

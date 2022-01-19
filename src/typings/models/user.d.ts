@@ -1,4 +1,5 @@
 export interface UserModel {
+  _id: Types.ObjectId;
   name: string;
   email: string;
   password: string;
@@ -6,9 +7,4 @@ export interface UserModel {
   role: string;
   status: boolean;
   googleOrigin: boolean;
-}
-
-export enum USER_ROLES {
-  ADMIN = "ADMIN",
-  USER = "USER",
 }
