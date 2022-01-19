@@ -22,7 +22,8 @@ export const userSchema = new Schema<UserModel>({
   role: {
     type: String,
     required: true,
-    enum: [USER_ROLES.ADMIN, USER_ROLES.USER],
+    //TODO: There a middleware in the route to check roles. Is this necessary? good practice? should I keep it?
+    enum: [USER_ROLES.ADMIN, USER_ROLES.USER, USER_ROLES.SALES],
   },
   status: {
     type: Boolean,

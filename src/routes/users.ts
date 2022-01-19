@@ -9,7 +9,6 @@ import {
 } from "../controllers/users";
 import { validateUser } from "../middlewares/validate-user";
 import { Role } from "../models/role";
-// import { USER_ROLES } from "../typings/models/user";
 
 const router = Router();
 
