@@ -7,8 +7,8 @@ import {
   usersPost,
   usersDelete,
 } from "../controllers/users";
+import { isValidRole } from "../helpers/db-validators";
 import { validateUser } from "../middlewares/validate-user";
-import { Role } from "../models/role";
 
 const router = Router();
 
@@ -23,12 +23,7 @@ router.post(
     }),
     check("email", "Invalid email").isEmail(),
     // check("role").isIn([USER_ROLES.ADMIN, USER_ROLES.USER]),
-    check("role").custom(async (role = "") => {
-      const roleExist = await Role.findOne({ role });
-      if (!roleExist) {
-        throw new Error(`The user role "${role}" does not exist on DB`);
-      }
-    }),
+    check("role").custom(isValidRole),
     validateUser,
   ],
   usersPost
