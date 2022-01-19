@@ -7,7 +7,7 @@ import {
   usersPost,
   usersDelete,
 } from "../controllers/users";
-import { isValidRole } from "../helpers/db-validators";
+import { isValidRole, uniqueEmailOnDB } from "../helpers/db-validators";
 import { validateUser } from "../middlewares/validate-user";
 
 const router = Router();
@@ -22,6 +22,7 @@ router.post(
       min: 6,
     }),
     check("email", "Invalid email").isEmail(),
+    check("email").custom(uniqueEmailOnDB),
     // check("role").isIn([USER_ROLES.ADMIN, USER_ROLES.USER]),
     check("role").custom(isValidRole),
     validateUser,

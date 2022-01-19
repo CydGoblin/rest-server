@@ -27,15 +27,6 @@ export const usersPost = async (
   // TODO: Sanatize
   const user = new User({ name, email, password, role });
 
-  // Validate unique email
-  const alreadyExist = await User.findOne({ email }); // { email: email }
-  if (alreadyExist) {
-    return res.status(400).json({
-      error: true,
-      message: "An user with this email already exist.",
-    });
-  }
-
   // encript password
   const salt = bcrypt.genSaltSync();
   user.password = bcrypt.hashSync(password, salt);
