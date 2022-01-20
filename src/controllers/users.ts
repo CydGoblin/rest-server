@@ -32,9 +32,9 @@ export const usersPost = async (
   req: Request<{}, {}, UserModel>,
   res: Response
 ) => {
-  const { name, email, password, role } = req.body;
+  const { password } = req.body;
   // TODO: Sanatize
-  const user = new User({ name, email, password, role });
+  const user = new User(req.body);
 
   // encript password
   const salt = bcrypt.genSaltSync();

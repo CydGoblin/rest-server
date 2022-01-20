@@ -21,14 +21,16 @@ router.get("/", usersGet);
 router.post(
   "/",
   [
-    check("name", "Name is required").notEmpty(),
+    check("name", "Name is required").notEmpty().trim(),
     check("password", "Password required 6 or more characters").isLength({
       min: 6,
     }),
-    check("email", "Invalid email").isEmail(),
+    check("email", "Invalid email").isEmail().normalizeEmail(),
     check("email").custom(uniqueEmailOnDB),
     // check("role").isIn([USER_ROLES.ADMIN, USER_ROLES.USER]),
     check("role").custom(isValidRole),
+    check("status").toBoolean(),
+    check("googleOrigin").toBoolean(),
     validateUser,
   ],
   usersPost
