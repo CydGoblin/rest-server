@@ -17,7 +17,7 @@ export const uniqueEmailOnDB = async (email: string) => {
   }
 };
 
-export const userdoesntExists = async (id: string) => {
+export const userExists = async (id: string) => {
   const alreadyExist = await User.findById(id);
 
   if (!alreadyExist) {

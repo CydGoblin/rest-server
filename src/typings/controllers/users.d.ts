@@ -10,6 +10,8 @@ export interface GetQuery {
 }
 
 export interface PutParams {
-  [key: string]: string; // TODO: it breaks without this
+  // FIX: it breaks without this, more info on link. Seems to be related.
+  // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/39358#issuecomment-546559564
+  [key: string]: string;
   id: string;
 }

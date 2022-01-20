@@ -10,7 +10,7 @@ import {
 import {
   isValidRole,
   uniqueEmailOnDB,
-  userdoesntExists,
+  userExists,
 } from "../helpers/db-validators";
 import { validateUser } from "../middlewares/validate-user";
 
@@ -40,14 +40,22 @@ router.put(
   "/:id",
   [
     check("id", "Invalid ID").isMongoId(),
-    check("id").custom(userdoesntExists),
+    check("id").custom(userExists),
     validateUser,
   ],
   usersPut
 );
 
-router.patch("/", usersPatch);
+router.patch(
+  "/",
+  [
+    check("id", "Invalid ID").isMongoId(),
+    check("id").custom(userExists),
+    validateUser,
+  ],
+  usersPatch
+);
 
-router.delete("/", usersDelete);
+router.delete("/:id", usersDelete);
 
 export default router;

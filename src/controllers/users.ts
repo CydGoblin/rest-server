@@ -106,8 +106,24 @@ export const usersPatch = (req: Request, res: Response) => {
   });
 };
 
-export const usersDelete = (req: Request, res: Response) => {
-  res.json({
-    message: "delete API",
-  });
+export const usersDelete = async (req: Request<PutParams>, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    // Delete form DB
+    // const user = await User.findByIdAndDelete(id);
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      { status: false },
+      { new: true }
+    );
+
+    res.json({
+      id,
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
