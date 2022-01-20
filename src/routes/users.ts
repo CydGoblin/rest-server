@@ -7,7 +7,11 @@ import {
   usersPost,
   usersDelete,
 } from "../controllers/users";
-import { isValidRole, uniqueEmailOnDB } from "../helpers/db-validators";
+import {
+  isValidRole,
+  uniqueEmailOnDB,
+  userdoesntExists,
+} from "../helpers/db-validators";
 import { validateUser } from "../middlewares/validate-user";
 
 const router = Router();
@@ -30,7 +34,15 @@ router.post(
   usersPost
 );
 
-router.put("/:id", usersPut);
+router.put(
+  "/:id",
+  [
+    check("id", "Invalid ID").isMongoId(),
+    check("id").custom(userdoesntExists),
+    validateUser,
+  ],
+  usersPut
+);
 
 router.patch("/", usersPatch);
 

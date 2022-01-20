@@ -45,7 +45,7 @@ export const usersPut = async (
   res: Response
 ) => {
   const { id } = req.params;
-  const { password, email, ...data } = req.body;
+  const { password, ...data } = req.body;
 
   // To modify body
   let encryptedPassword: string;
@@ -59,19 +59,25 @@ export const usersPut = async (
 
     updatedUser = {
       password: encryptedPassword,
-      email,
       ...data,
     };
   } else {
     updatedUser = {
       password,
-      email,
       ...data,
     };
   }
 
   try {
     const user = await User.findByIdAndUpdate(id, updatedUser, { new: true });
+
+    if (!user) {
+      res.status(400).json({
+        error: true,
+        message: `No user with id ${id} exist`,
+      });
+    }
+
     res.json({
       message: "put API",
       user,

@@ -9,5 +9,6 @@ export interface GetQuery {
 }
 
 export interface PutParams {
+  [key: string]: string; // TODO: it breaks without this
   id: string;
 }

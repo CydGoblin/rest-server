@@ -16,3 +16,11 @@ export const uniqueEmailOnDB = async (email: string) => {
     throw new Error("An user with this email already exist.");
   }
 };
+
+export const userdoesntExists = async (id: string) => {
+  const alreadyExist = await User.findById(id);
+
+  if (!alreadyExist) {
+    throw new Error(`An user with ID ${id} does not exist.`);
+  }
+};
