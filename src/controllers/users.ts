@@ -5,16 +5,26 @@ import { GetQuery, PutParams } from "../typings/controllers/users";
 import { UserModel } from "../typings/models/user";
 
 // Quety takes from ?query=1
-export const usersGet = (req: Request<{}, {}, {}, GetQuery>, res: Response) => {
-  // We only get strings from query
-  const { limit } = req.query;
+export const usersGet = async (
+  req: Request<{}, {}, {}, GetQuery>,
+  res: Response
+) => {
+  const { limit = 5, page = 1 } = req.query;
+  const calcPage = +page >= 2 ? (+page - 1) * +limit : 0;
 
-  // Parse and convert example
-  // const limits = +req.query.limit;
+  // We only get strings from query, convert to number
+  const users = await User.find()
+    .skip(calcPage)
+    .limit(+limit);
+
+  const total = await User.countDocuments();
 
   res.json({
-    message: "get API",
-    limit,
+    error: false,
+    data: {
+      total,
+      users,
+    },
   });
 };
 
@@ -34,8 +44,8 @@ export const usersPost = async (
   await user.save();
 
   res.json({
-    message: "post API",
-    user,
+    error: false,
+    data: user,
   });
 };
 
@@ -79,8 +89,8 @@ export const usersPut = async (
     }
 
     res.json({
-      message: "put API",
-      user,
+      error: false,
+      data: user,
     });
   } catch (error) {
     console.log(error);

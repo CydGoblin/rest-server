@@ -5,7 +5,8 @@ export interface PostBody {
 }
 
 export interface GetQuery {
-  limit: string;
+  limit?: string;
+  page?: string;
 }
 
 export interface PutParams {
