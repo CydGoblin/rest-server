@@ -13,12 +13,14 @@ export const usersGet = async (
   const calcPage = +page >= 2 ? (+page - 1) * +limit : 0;
   const query = { status: true }; // Only active users
 
-  // We only get strings from query, convert to number
-  const users = await User.find(query)
+  const userPromise = User.find(query)
     .skip(calcPage)
+    // We only get strings from query, convert to number
     .limit(+limit);
 
-  const total = await User.countDocuments(query);
+  const totalPromise = User.countDocuments(query);
+
+  const [users, total] = await Promise.all([userPromise, totalPromise]);
 
   res.json({
     error: false,
