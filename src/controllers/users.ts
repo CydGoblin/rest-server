@@ -11,13 +11,14 @@ export const usersGet = async (
 ) => {
   const { limit = 5, page = 1 } = req.query;
   const calcPage = +page >= 2 ? (+page - 1) * +limit : 0;
+  const query = { status: true }; // Only active users
 
   // We only get strings from query, convert to number
-  const users = await User.find()
+  const users = await User.find(query)
     .skip(calcPage)
     .limit(+limit);
 
-  const total = await User.countDocuments();
+  const total = await User.countDocuments(query);
 
   res.json({
     error: false,
