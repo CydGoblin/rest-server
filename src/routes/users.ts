@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { check } from "express-validator";
-import { usersPatch } from "../controllers/users";
 import {
   usersGet,
   usersPut,
@@ -44,16 +43,6 @@ router.put(
     validateUser,
   ],
   usersPut
-);
-
-router.patch(
-  "/",
-  [
-    check("id", "Invalid ID").isMongoId(),
-    check("id").custom(userExists),
-    validateUser,
-  ],
-  usersPatch
 );
 
 router.delete("/:id", usersDelete);
