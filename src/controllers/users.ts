@@ -4,31 +4,35 @@ import { User } from "../models/user";
 import { GetQuery, PutParams } from "../typings/controllers/users";
 import { UserModel } from "../typings/models/user";
 
-// Quety takes from ?query=1
+// Query takes from ?query=1
 export const usersGet = async (
   req: Request<{}, {}, {}, GetQuery>,
   res: Response
 ) => {
-  const { limit = 5, page = 1 } = req.query;
-  const calcPage = +page >= 2 ? (+page - 1) * +limit : 0;
+  const { limit, page = 1 } = req.query;
+  const calcSkip = Number(page) >= 2 ? (Number(page) - 1) * Number(limit) : 0;
   const query = { status: true }; // Only active users
 
-  const userPromise = User.find(query)
-    .skip(calcPage)
-    // We only get strings from query, convert to number
-    .limit(+limit);
-
+  // Depends on User
+  const userPromise = User.find(query).skip(calcSkip).limit(Number(limit));
   const totalPromise = User.countDocuments(query);
 
-  const [users, total] = await Promise.all([userPromise, totalPromise]);
+  try {
+    const [users, total] = await Promise.all([userPromise, totalPromise]);
 
-  res.json({
-    error: false,
-    data: {
-      total,
-      users,
-    },
-  });
+    res.json({
+      error: false,
+      data: {
+        total,
+        users,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.json({
+      error: true,
+    });
+  }
 };
 
 export const usersPost = async (
@@ -43,16 +47,20 @@ export const usersPost = async (
   const salt = bcrypt.genSaltSync();
   user.password = bcrypt.hashSync(password, salt);
 
-  // save on DB
-  await user.save();
+  try {
+    // save on DB
+    const userSaved = await user.save();
 
-  res.json({
-    error: false,
-    data: user,
-  });
+    res.json({
+      error: false,
+      data: user,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
 
-// Params takes from the url lie /:param1
+// Params takes from the url like /:param1
 export const usersPut = async (
   req: Request<PutParams, {}, UserModel>,
   res: Response
@@ -96,14 +104,8 @@ export const usersPut = async (
       data: user,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
-};
-
-export const usersPatch = (req: Request, res: Response) => {
-  res.json({
-    message: "Patch API",
-  });
 };
 
 export const usersDelete = async (req: Request<PutParams>, res: Response) => {
