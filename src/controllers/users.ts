@@ -1,25 +1,21 @@
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
-import { User } from "../models/user";
+import { getUsers } from "../data-access/get-users";
+import { User } from "../data-access/models/user";
 import { GetQuery, PutParams } from "../typings/controllers/users";
-import { UserModel } from "../typings/models/user";
+import { IUser } from "../typings/models/user";
 
 // Query takes from ?query=1
 export const usersGet = async (
   req: Request<{}, {}, {}, GetQuery>,
   res: Response
 ) => {
-  const { limit, page = 1 } = req.query;
-  const calcSkip = Number(page) >= 2 ? (Number(page) - 1) * Number(limit) : 0;
-  const query = { status: true }; // Only active users
+  const { limit = 5, page = 1 } = req.query;
+  const skip = Number(page) >= 2 ? (Number(page) - 1) * Number(limit) : 0;
 
-  // Depends on User
-  const userPromise = User.find(query).skip(calcSkip).limit(Number(limit));
-  const totalPromise = User.countDocuments(query);
+  const [users, total] = await getUsers(Number(limit), skip, true);
 
   try {
-    const [users, total] = await Promise.all([userPromise, totalPromise]);
-
     res.json({
       error: false,
       data: {
@@ -35,10 +31,7 @@ export const usersGet = async (
   }
 };
 
-export const usersPost = async (
-  req: Request<{}, {}, UserModel>,
-  res: Response
-) => {
+export const usersPost = async (req: Request<{}, {}, IUser>, res: Response) => {
   const { password } = req.body;
   // TODO: Sanatize
   const user = new User(req.body);
@@ -62,7 +55,7 @@ export const usersPost = async (
 
 // Params takes from the url like /:param1
 export const usersPut = async (
-  req: Request<PutParams, {}, UserModel>,
+  req: Request<PutParams, {}, IUser>,
   res: Response
 ) => {
   const { id } = req.params;
@@ -70,7 +63,7 @@ export const usersPut = async (
 
   // To modify body
   let encryptedPassword: string;
-  let updatedUser: UserModel;
+  let updatedUser: IUser;
 
   // TODO: Validate with DB
   if (password) {

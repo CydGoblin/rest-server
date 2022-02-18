@@ -1,8 +1,8 @@
 import { model, Schema } from "mongoose";
-import { USER_ROLES } from "../typings/constants/roles";
-import { UserModel } from "../typings/models/user";
+import { USER_ROLES } from "../../typings/constants/roles";
+import { IUser } from "../../typings/models/user";
 
-export const userSchema = new Schema<UserModel>({
+export const userSchema = new Schema<IUser>({
   name: {
     type: String,
     require: [true, "Name is required"],

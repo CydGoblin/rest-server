@@ -3,16 +3,18 @@ import express, { Express } from "express";
 import cors from "cors";
 dotenv.config();
 
-import { dbConnection } from "../database/config";
+import { DB } from "../../database/config";
 
 // Routes
-import { default as userRouter } from "../routes/users";
+import { default as userRouter } from "../../routes/users";
 
 export class Server {
-  app: Express;
   port: string;
+  app: Express;
+  DB: DB;
 
-  constructor() {
+  constructor(DB: DB) {
+    this.DB = DB;
     if (process.env.PORT) {
       this.port = process.env.PORT;
     } else {
@@ -29,7 +31,7 @@ export class Server {
   }
 
   async database() {
-    await dbConnection();
+    DB.connect();
   }
 
   middlewares() {
