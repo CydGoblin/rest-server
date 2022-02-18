@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
-import { RoleModel } from "../typings/models/role";
+import { IRoleModel } from "./IRole";
 
-export const RoleSchema = new Schema<RoleModel>({
+export const RoleSchema = new Schema<IRoleModel>({
   role: {
     type: String,
     required: [true, "Role is required"],

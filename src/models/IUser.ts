@@ -1,4 +1,6 @@
-export interface UserModel {
+import { Types } from "mongoose";
+
+export interface IUserModel {
   _id: Types.ObjectId;
   name: string;
   email: string;

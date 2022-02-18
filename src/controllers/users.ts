@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import { User } from "../models/user";
-import { GetQuery, PutParams } from "../typings/controllers/users";
-import { UserModel } from "../typings/models/user";
+import { GetQuery, PutParams } from "./IUser";
+import { IUserModel } from "../models/IUser";
 
 // Quety takes from ?query=1
 export const usersGet = async (
@@ -32,7 +32,7 @@ export const usersGet = async (
 };
 
 export const usersPost = async (
-  req: Request<{}, {}, UserModel>,
+  req: Request<{}, {}, IUserModel>,
   res: Response
 ) => {
   const { password } = req.body;
@@ -54,7 +54,7 @@ export const usersPost = async (
 
 // Params takes from the url lie /:param1
 export const usersPut = async (
-  req: Request<PutParams, {}, UserModel>,
+  req: Request<PutParams, {}, IUserModel>,
   res: Response
 ) => {
   const { id } = req.params;
@@ -62,7 +62,7 @@ export const usersPut = async (
 
   // To modify body
   let encryptedPassword: string;
-  let updatedUser: UserModel;
+  let updatedUser: IUserModel;
 
   // TODO: Validate with DB
   if (password) {
